@@ -6,3 +6,7 @@ Recipe app to track all the recipes and recommend new one
 - Add a new recipe
 - Recommend a random recipe
 - Reminder for the shopping list
+
+## Demo
+
+You can try the app from this [link](https://bahrain.streamlit.app/) 
