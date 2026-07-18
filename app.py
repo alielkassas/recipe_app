@@ -1,18 +1,32 @@
 import streamlit as st
 from openai import OpenAI
 
-# 1. Page Configuration
-st.set_page_config(page_title="OpenRouter Chatbot", page_icon="🤖", layout="centered")
-st.title("🤖 OpenRouter Multi-Model Chat")
+# Page configuration
+st.set_page_config(page_title="Bahrain Chat", page_icon="⚡", layout="centered")
+st.title("BH Chat")
+st.caption("Made by Ali El-Kassas")
+
+# Hardcoded single target model ID
 TARGET_MODEL = "nvidia/nemotron-3-nano-30b-a3b:free"
 
-if "OPENROUTER_API_KEY" in st.secrets:
-    api_key = st.secrets["OPENROUTER_API_KEY"]
-else:
+# 1. Safely extract the API key first
+if "OPENROUTER_API_KEY" not in st.secrets:
     st.error("Missing API Key! Please configure 'OPENROUTER_API_KEY' in your Streamlit Secrets.")
     st.stop()
-   
-# Maintain conversational session state history
+
+api_key = st.secrets["OPENROUTER_API_KEY"]
+
+# 2. Guarantee Client Initialization (Now outside of an conditional block)
+client = OpenAI(
+    base_url="https://openrouter.ai/api/v1",
+    api_key=api_key,
+    default_headers={
+        "HTTP-Referer": "https://share.streamlit.io", 
+        "X-Title": "Public Nemotron Sandbox",         
+    }
+)
+
+# 3. Maintain conversational session state history
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
@@ -21,7 +35,7 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# User prompt loop
+# 4. User prompt loop
 if prompt := st.chat_input("Ask Nemotron anything..."):
     # Render user chat instantly
     st.session_state.messages.append({"role": "user", "content": prompt})
