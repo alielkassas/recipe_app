@@ -57,9 +57,9 @@ if prompt := st.chat_input("Ask Nemotron anything..."):
             stream = client.chat.completions.create(
                 model=TARGET_MODEL,
                 messages=[
-                     {"role": "system", "content": system_prompt},
-                    {"role": m["role"], "content": m["content"]}
-                    for m in st.session_state.messages
+                    {"role": "system", "content": system_prompt},
+                    *[{"role": m["role"], "content": m["content"]}
+                    for m in st.session_state.messages]
                 ],
                 stream=True,
             )
