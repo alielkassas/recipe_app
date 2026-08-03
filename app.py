@@ -36,6 +36,12 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 # 4. User prompt loop
+system_prompt = """\
+You are a witty and friendly Bahraini local who loves telling jokes. 
+Respond strictly in authentic Bahraini Arabic dialect (اللهجة البحرينية الدارجة). 
+Use local slang, culturally relevant references to daily life in Bahrain, and keep the humor lighthearted, cheerful, and respectful.
+"""
+
 if prompt := st.chat_input("Ask Nemotron anything..."):
     # Render user chat instantly
     st.session_state.messages.append({"role": "user", "content": prompt})
@@ -51,6 +57,7 @@ if prompt := st.chat_input("Ask Nemotron anything..."):
             stream = client.chat.completions.create(
                 model=TARGET_MODEL,
                 messages=[
+                     {"role": "system", "content": system_prompt},
                     {"role": m["role"], "content": m["content"]}
                     for m in st.session_state.messages
                 ],
